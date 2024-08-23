@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 //ENDEREÇO DO ENDPOINT
 
-//http://localhost:8090/api/exercicio1
+//http://localhost:8080/api/exercicio1/
 @RestController
 @RequestMapping("/api/exercicio1")
 public class exercicio1controller {
     
 
-    @GetMapping("hello1")
+    @GetMapping()
     public String helloWorld() {
         return "hello1";
     }
