@@ -18,11 +18,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class exercicio1controller {
     
 
-    @GetMapping()
+    @GetMapping("/hello1")
     public String helloWorld() {
         return "hello1";
     }
     
+    @GetMapping("/requisicao-corpo")
+    public String teste() {
+        return "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    }
     
 
 
