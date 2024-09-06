@@ -40,3 +40,4 @@ public class UsuarioController {
 
         return "Bem-vindo, " + usuario.getName() + "! Você tem " + usuario.getAge() + " anos.";
     }
+}
