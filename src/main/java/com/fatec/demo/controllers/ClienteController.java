@@ -1,6 +1,9 @@
 package com.fatec.demo.controllers;
 
 import org.springframework.web.bind.annotation.*;
+
+import com.fatec.demo.entities.Cliente;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,7 @@ import java.util.List;
 public class ClienteController {
  
     private List<Cliente> clientes = new ArrayList<>();
-    private int proximoIdId = 1;
+    private Long proximoIdId = (long) 1;
  
     // Create (POST)
     @PostMapping("/criar")

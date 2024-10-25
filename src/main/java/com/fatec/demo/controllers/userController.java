@@ -20,7 +20,7 @@ import com.fatec.demo.entities.User;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class userController {
     
     private List<User> usuarios = new ArrayList<>();
     private int proximoId = 1;
