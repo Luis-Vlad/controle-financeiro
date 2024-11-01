@@ -1,13 +1,15 @@
 package com.fatec.demo.controllers;
 
 import com.fatec.demo.entities.Cliente;
-
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.List;
+
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-    Optional<Cliente> findByNome(String nome);
+    
+    // Busca todos os clientes pelo nome exato
+    List<Cliente> findAllByNome(String nome);
+
+    // Busca todos os clientes cujo nome contém a string especificada
+    List<Cliente> findAllByNomeContaining(String nome);
 }

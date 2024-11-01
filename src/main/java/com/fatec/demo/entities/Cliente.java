@@ -1,24 +1,16 @@
 package com.fatec.demo.entities;
 
-import org.springframework.data.annotation.Id;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
-
-import java.util.List;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "clientes")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
 
-    // Relacionamento com Contas a Receber
-    @OneToMany(mappedBy = "cliente")
-    private List<ContaReceber> contasReceber;
+    @Column(nullable = false, length = 60)
+    private String nome;
 
     // Construtor padrão
     public Cliente() {}
@@ -45,4 +37,3 @@ public class Cliente {
         this.nome = nome;
     }
 }
-

@@ -1,56 +1,66 @@
 package com.fatec.demo.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.fatec.demo.entities.Cliente;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-//POST => http://localhost:8080/clientes/criar
-//GET => http://localhost:8080/clientes/listar
-//PUT => http://localhost:8080/clientes/atualizar/{id}
-//DELETE => http://localhost:8080/clientes/deletar/{id}
- 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/clientes") // Mudando para seguir o padrão do código certo
 public class ClienteController {
- 
-    private List<Cliente> clientes = new ArrayList<>();
-    private Long proximoIdId = (long) 1;
- 
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     // Create (POST)
-    @PostMapping("/criar")
-    public Cliente criarCliente(@RequestBody Cliente cliente) {
-        cliente.setId(proximoIdId);
-        proximoIdId++;
-        clientes.add(cliente);
-        return cliente;
+    @PostMapping()
+    public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
+        Cliente clienteCriado = clienteRepository.save(cliente);
+        return new ResponseEntity<>(clienteCriado, HttpStatus.CREATED);
     }
- 
+
     // Read (GET)
-    @GetMapping("/listar")
-    public List<Cliente> getClientes() {
-        return clientes;
+    @GetMapping()
+    public ResponseEntity<List<Cliente>> getClientes() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
- 
- 
-    // Update (PUT)
-    @PutMapping("/atualizar/{id}")
-    public Cliente atualizaCliente(@PathVariable int id, @RequestBody Cliente clienteAtualizado) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getId() == id) {
-                cliente.setNome(clienteAtualizado.getNome());
-                return cliente;
-            }
+
+    // Get by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> getById(@PathVariable Long id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        if (cliente.isPresent()) {
+            return new ResponseEntity<>(cliente.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return null;
     }
- 
+
+    // Update (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> atualizaCliente(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
+        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            cliente.setNome(clienteAtualizado.getNome()); // Atualizar outros campos conforme necessário
+            clienteRepository.save(cliente);
+            return new ResponseEntity<>(cliente, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     // Delete (DELETE)
-    @DeleteMapping("/deletar/{id}")
-    public String deleteCliente(@PathVariable int id ) {
-        clientes.removeIf(cliente -> cliente.getId() == id);
-        return "Cliente com id " + id + " foi removido.";
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
+        if (clienteRepository.existsById(id)) {
+            clienteRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

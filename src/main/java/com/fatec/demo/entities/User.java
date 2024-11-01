@@ -1,19 +1,20 @@
 package com.fatec.demo.entities;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "usuarios")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //Desabilitar qdo quiser trabalhar com @Valid
-    //@NotBlank(message = "O nome não pode estar em branco.")
+    @Column(nullable = false, length = 60)
     private String name;
 
-    //Desabilitar qdo quiser trabalhar com @Valid
-    //@NotNull(message = "A idade é obrigatória.")
-    //@Min(value = 0, message = "A idade não pode ser negativa.")
+    @Column()
     private int age;
 
-    // Construtor padrão
     public User() {
     }
 
@@ -23,10 +24,13 @@ public class User {
         this.age = age;
     }
 
-    // Getters e Setters
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -43,5 +47,4 @@ public class User {
     public void setAge(int age) {
         this.age = age;
     }
-
 }
