@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+//http://localhost:8080/api/contas-pagar
+
 @RestController
-@RequestMapping("/contas-pagar")
+@RequestMapping("/api/contas-pagar")
 public class ContaPagarController {
 
     private final ContaPagarRepository contaPagarRepository;
@@ -21,17 +23,22 @@ public class ContaPagarController {
 
     @PostMapping("/criar")
     public ResponseEntity<ContaPagar> criarContaPagar(@RequestBody ContaPagar contaPagar) {
+        
         if (contaPagar.getEmissao().isAfter(contaPagar.getVencimento())) {
-            return ResponseEntity.badRequest().body(null);
+            throw new IllegalArgumentException("A data de emissão não pode ser posterior à data de vencimento.");
         }
         if (contaPagar.getValor().compareTo(BigDecimal.ZERO) <= 0) {
-            return ResponseEntity.badRequest().body(null);
+            throw new IllegalArgumentException("O valor da conta a pagar deve ser positivo.");
         }
-        if (fornecedor.findById((long) contaPagar.getFornecedor().getId()).isEmpty()) {
-            return ResponseEntity.badRequest().body(null);
+        if (fornecedor.findById(contaPagar.getFornecedor().getId()).isEmpty()) {
+            throw new IllegalArgumentException("Fornecedor não encontrado. Por favor, cadastre o fornecedor antes de associá-lo a uma conta a pagar.");
         }
+        
+
         ContaPagar saved = contaPagarRepository.save(contaPagar);
         return ResponseEntity.ok(saved);
+
+        
     }
 
     @GetMapping("/listar")
@@ -40,14 +47,14 @@ public class ContaPagarController {
     }
 
     @GetMapping("/listar/{id}")
-    public ResponseEntity<ContaPagar> obterContaPagar(@PathVariable Long id) {
+    public ResponseEntity<ContaPagar> obterContaPagar(@PathVariable int id) {
         return contaPagarRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/atualizar/{id}")
-    public ResponseEntity<ContaPagar> atualizarContaPagar(@PathVariable Long id, @RequestBody ContaPagar contaPagarAtualizada) {
+    public ResponseEntity<ContaPagar> atualizarContaPagar(@PathVariable int id, @RequestBody ContaPagar contaPagarAtualizada) {
         return contaPagarRepository.findById(id)
                 .map(contaPagar -> {
                     contaPagar.setEmissao(contaPagarAtualizada.getEmissao());
@@ -60,7 +67,7 @@ public class ContaPagarController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarContaPagar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarContaPagar(@PathVariable int id) {
         if (!contaPagarRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

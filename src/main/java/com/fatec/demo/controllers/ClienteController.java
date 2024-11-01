@@ -9,29 +9,31 @@ import com.fatec.demo.entities.Cliente;
 import java.util.List;
 import java.util.Optional;
 
+//http://localhost:8080/api/clientes
+
 @RestController
-@RequestMapping("/api/clientes") // Mudando para seguir o padrão do código certo
+@RequestMapping("/api/clientes")
 public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
 
     // Create (POST)
-    @PostMapping()
+    @PostMapping("/criar")
     public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
         Cliente clienteCriado = clienteRepository.save(cliente);
         return new ResponseEntity<>(clienteCriado, HttpStatus.CREATED);
     }
 
     // Read (GET)
-    @GetMapping()
+    @GetMapping("/listar")
     public ResponseEntity<List<Cliente>> getClientes() {
         List<Cliente> clientes = clienteRepository.findAll();
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
     // Get by ID
-    @GetMapping("/{id}")
+    @GetMapping("/listar/{id}")
     public ResponseEntity<Cliente> getById(@PathVariable Long id) {
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if (cliente.isPresent()) {
@@ -42,7 +44,7 @@ public class ClienteController {
     }
 
     // Update (PUT)
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     public ResponseEntity<Cliente> atualizaCliente(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(id);
         if (clienteOptional.isPresent()) {
@@ -55,7 +57,7 @@ public class ClienteController {
     }
 
     // Delete (DELETE)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
         if (clienteRepository.existsById(id)) {
             clienteRepository.deleteById(id);
