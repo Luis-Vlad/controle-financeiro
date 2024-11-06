@@ -15,20 +15,22 @@ import jakarta.persistence.Table;
 public class ContaReceber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+    
     private LocalDate emissao;
     private LocalDate vencimento;
+    private BigDecimal valor;
 
     @ManyToOne
     private Cliente cliente;
 
-    private BigDecimal valor;
+    
 
     // Getters e Setters e Construtor
     public ContaReceber() {
     }
  
-    public ContaReceber(int id, LocalDate emissao, LocalDate vencimento, BigDecimal valor, Cliente cliente) {
+    public ContaReceber(Long id, LocalDate emissao, LocalDate vencimento, BigDecimal valor, Cliente cliente) {
         this.id = id;
         this.emissao = emissao;
         this.vencimento = vencimento;
@@ -37,11 +39,11 @@ public class ContaReceber {
     }
  
     // Getters e Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
  
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
  

@@ -21,6 +21,7 @@ public class ClienteController {
     // Create (POST)
     @PostMapping("/criar")
     public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
+        //Salvando Cliente
         Cliente clienteCriado = clienteRepository.save(cliente);
         return new ResponseEntity<>(clienteCriado, HttpStatus.CREATED);
     }
@@ -28,13 +29,15 @@ public class ClienteController {
     // Read (GET)
     @GetMapping("/listar")
     public ResponseEntity<List<Cliente>> getClientes() {
+        //Listando clientes
         List<Cliente> clientes = clienteRepository.findAll();
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
-    // Get by ID
+    // Get por ID
     @GetMapping("/listar/{id}")
     public ResponseEntity<Cliente> getById(@PathVariable Long id) {
+        //Listando por ID
         Optional<Cliente> cliente = clienteRepository.findById(id);
         if (cliente.isPresent()) {
             return new ResponseEntity<>(cliente.get(), HttpStatus.OK);
@@ -46,10 +49,11 @@ public class ClienteController {
     // Update (PUT)
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<Cliente> atualizaCliente(@PathVariable Long id, @RequestBody Cliente clienteAtualizado) {
+        //Atualizando
         Optional<Cliente> clienteOptional = clienteRepository.findById(id);
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            cliente.setNome(clienteAtualizado.getNome()); // Atualizar outros campos conforme necessário
+            cliente.setNome(clienteAtualizado.getNome());
             clienteRepository.save(cliente);
             return new ResponseEntity<>(cliente, HttpStatus.OK);
         }
